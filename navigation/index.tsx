@@ -7,7 +7,7 @@ import { ColorSchemeName } from 'react-native';
 //import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Colors from '../constants/Colors';
 
-import ChatRoomScreen from '../screens/ChatRoom';
+import ChatRoomScreen from '../screens/ChatRoomScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList } from '../types';
 import MainTabNavigator from './MainTabNavigator';
