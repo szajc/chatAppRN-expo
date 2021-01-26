@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import styles from './styles';
 
 import { MaterialCommunityIcons, FontAwesome5, Entypo, Fontisto, MaterialIcons } from '@expo/vector-icons'
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { ForceTouchGestureHandler, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 
 import {
     API,
@@ -20,22 +20,19 @@ const InputBox = (props: any) => {
     const [myUserId, setMyUserId] = useState(null);
 
     useEffect(() => {
-        try {
-            const fetchUser = async () => {
-                const userInfo = await Auth.currentAuthenticatedUser();
-                setMyUserId(userInfo.attributes.sub);
-            }
-        } catch (error) {
-            console.log(error)
+        const fetchUser = async () => {
+            const userInfo = await Auth.currentAuthenticatedUser();
+            setMyUserId(userInfo.attributes.sub);
         }
-    })
+        fetchUser();
+    }, [])
 
     const onMicrophonePress = () => {
-        console.warn(`Microphone!`)
+        console.warn(`Microphone not imp. yet!`)
     }
 
     const onSendPress = async () => {
-        console.warn(`sending: ${message}`)
+        //console.warn(`sending: ${message}`)
         try {
             await API.graphql(
                 graphqlOperation(
@@ -48,10 +45,10 @@ const InputBox = (props: any) => {
                     }
                 )
             )
+            setMessage("");
         } catch (error) {
-            
+            console.log(error)
         }
-        // send message to the backend
     }
 
     const onPress = () => {
