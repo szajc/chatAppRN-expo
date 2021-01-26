@@ -1,6 +1,5 @@
 node_modules/**/*
-# REMOVED 
-.expo/*
+# REMOVED .expo/*
 npm-debug.*
 *.jks
 *.p8
