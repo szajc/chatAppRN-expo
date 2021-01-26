@@ -1,11 +1,20 @@
 import moment from 'moment';
 import React from 'react';
-import { View, Text, Image } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { User } from '../../types';
+import { 
+    View, 
+    Text, 
+    Image, 
+    TouchableWithoutFeedback 
+} from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 
 import styles from './style';
+import { API, Auth, graphqlOperation } from 'aws-amplify';
+import {
+    createChatRoom,
+    createChatRoomUser
+} from '../../graphql/mutations';
 
 export type ContactListItemProps = {
     user: User;
@@ -17,11 +26,57 @@ const ContactListItem = ( props: ContactListItemProps ) => {
 
     const navigation = useNavigation();
     
-    const onClick = () => {
-        navigation.navigate('ChatRoom', { 
-            id: user.id,
-            name: user.name,
-        });
+    const onClick = async () => {
+        try {
+            // create a new chatroom
+            const newChatRoomData = await API.graphql(
+                graphqlOperation(
+                   createChatRoom,
+                   { input: {} }
+                )
+            )
+
+            if (!newChatRoomData.data) {
+                return;
+            }
+
+            const newChatRoom = newChatRoomData.data.createChatRoom;
+            
+            // add user to the chatroom
+            await API.graphql(
+                graphqlOperation(
+                    createChatRoomUser,
+                    {   
+                        input: {
+                            userID: user.id,
+                            chatRoomID: newChatRoom.id, 
+                        }
+                    }
+                )
+            )
+
+            // add authenticated user to the chat room
+            const userInfo = await Auth.currentAuthenticatedUser();
+            await API.graphql(
+                graphqlOperation(
+                    createChatRoomUser,
+                    {
+                        input: {
+                            userID: userInfo.attributes.sub,
+                            chatRoomID: newChatRoom.id,
+                        }
+                    }
+                )
+            )
+
+            navigation.navigate('ChatRoom', { 
+                id: newChatRoom.id,
+                name: "hardcoded name",
+            });
+
+        } catch (error) {
+            console.log(error)
+        }
         //console.warn(`clicked on ${user.name}`);
     }
 

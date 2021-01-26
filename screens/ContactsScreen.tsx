@@ -36,7 +36,7 @@ export default function ContactsScreen() {
         style={{width: '100%'}}
         data={users} 
         renderItem={({ item }) => <ContactListItem user={item} />} 
-        keyExtractor={(item) => item.id}
+        //keyExtractor={(item) => item.id}
       />
       <NewMessageButton />
     </View>
