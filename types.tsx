@@ -35,4 +35,5 @@ export type ChatRoom = {
   id: String;
   users: User[];
   lastMessage: Message;
+  chatRoomUsers: any;
 }
