@@ -20,7 +20,7 @@ const ChatRoomScreen = () => {
                 keyExtractor={( item ) => item.id}
                 inverted
             />
-            <InputBox />
+            <InputBox chatRoomID={route.params.id} />
         </ImageBackground>
     );
 }
